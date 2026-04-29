@@ -25,7 +25,7 @@
         "Main.cpp",
         "Print.cpp",
         "-o",
-        "Main.exe"
+        "seaBattle.exe"
       ],
       "group": {
         "kind": "build",
