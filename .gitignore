@@ -1,0 +1,9 @@
+# Ignore everything
+*
+
+# Allow directories (so Git can traverse them)
+!*/
+
+# Allow only these file types
+!*.cpp
+!*.json
