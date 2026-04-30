@@ -1,6 +1,5 @@
 ﻿#include "Header.h"
-int counter_Player_shoot = 0;
-int counter_Enemy_shoot = 0;
+
 
 inline void SetCur(COORD pos)
 {
@@ -29,9 +28,8 @@ enum ConColors
 
 void SetPos(short a, short b)
 {
-	SetConsoleCursorPosition(h, { a, b });
+	SetConsoleCursorPosition(h, {a, b});
 }
-
 
 int **Allocate(int rows, int cols)
 {
@@ -40,12 +38,14 @@ int **Allocate(int rows, int cols)
 		ptr[i] = new int[cols];
 	return ptr;
 }
+
 void Free(int **p, int rows)
 {
 	for (int i = 0; i < rows; i++)
 		delete[] p[i];
 	delete[] p;
 }
+
 void Init(int **p, int rows, int cols)
 {
 	for (int i = 0; i < rows; i++)
@@ -55,15 +55,19 @@ void Init(int **p, int rows, int cols)
 	}
 }
 
-
 void SetColor(char C)
 {
 	SetConsoleTextAttribute(h, (WORD)(Red));
 	cout << C;
 	SetConsoleTextAttribute(h, (WORD)(LightGray));
-
 }
-void Main_menu()                                                                          //Главное меню
+
+// Global props
+int counter_Player_shoot = 0;
+int counter_Enemy_shoot = 0;
+COORD points[100] = {};
+
+void Main_menu() // Главное меню
 {
 	do
 	{
@@ -156,21 +160,21 @@ void Main_menu()                                                                
 // 	cout << endl;
 // }
 
-void RussianMessage(const char* str)
+void RussianMessage(const char *str)
 {
-    size_t len = strlen(str) + 1;
-    char* p = new char[len];
+	size_t len = strlen(str) + 1;
+	char *p = new char[len];
 
-    CharToOemA(str, p);  // explicitly ANSI version
+	CharToOemA(str, p); // explicitly ANSI version
 
-    cout << p << endl;
+	cout << p << endl;
 
-    delete[] p;
+	delete[] p;
 }
 
-bool place_1_deck_ship(short f[][size_arr], short size, short _x, short _y)   // A-> x coord , B -> y coord
+bool place_1_deck_ship(short f[][size_arr], short size, short _x, short _y) // A-> x coord , B -> y coord
 {
-	//а строка i, b столбец j
+	// а строка i, b столбец j
 
 	if (f[_y][_x] == 0)
 	{
@@ -181,7 +185,7 @@ bool place_1_deck_ship(short f[][size_arr], short size, short _x, short _y)   //
 		}
 		else if (_y == 0)
 		{
-			if (f[_y][_x + 1] == 0 && f[_y + 1][_x + 1] == 0 && f[_y + 1][_x] == 0 && f[_y + 1][_x - 1] == 0 && f[_y][_x - 1] == 0)   // проверяем окружные координаты .чтобы было свободно ,на возможность установки элемента
+			if (f[_y][_x + 1] == 0 && f[_y + 1][_x + 1] == 0 && f[_y + 1][_x] == 0 && f[_y + 1][_x - 1] == 0 && f[_y][_x - 1] == 0) // проверяем окружные координаты .чтобы было свободно ,на возможность установки элемента
 				return true;
 		}
 		else if (_x == 0)
@@ -198,26 +202,25 @@ bool place_1_deck_ship(short f[][size_arr], short size, short _x, short _y)   //
 				return true;
 			}
 		}
-	}//	if (f[a][b] != 0)
+	} //	if (f[a][b] != 0)
 
 	return 0;
-
 }
-bool place_3_deck_ship(short f[][size_arr], short size, short _x, short _y)   // A-> x coord , B -> y coord
+bool place_3_deck_ship(short f[][size_arr], short size, short _x, short _y) // A-> x coord , B -> y coord
 {
-	//а строка i, b столбец j
+	// а строка i, b столбец j
 
 	if (f[_y][_x] == 0)
 	{
 		if (_x == 0 && _y == 0)
 		{
-			//if (f[_y + 3][_x] == 0 && f[_y + 3][_x + 1] == 0 && f[_y + 2][_x + 1] == 0 && f[_y + 1][_x + 1] == 0 && f[_y][_x + 1] == 0)
+			// if (f[_y + 3][_x] == 0 && f[_y + 3][_x + 1] == 0 && f[_y + 2][_x + 1] == 0 && f[_y + 1][_x + 1] == 0 && f[_y][_x + 1] == 0)
 			if (f[_y + 1][_x] == 0 && f[_y + 1][_x + 1] == 0 && f[_y + 1][_x + 2] == 0 && f[_y + 1][_x + 3] == 0 && f[_y][_x + 3] == 0)
 				return true;
 		}
 		if (_y == 0)
 		{
-			if (f[_y][_x + 3] == 0 && f[_y + 1][_x + 3] == 0 && f[_y + 1][_x + 2] == 0 && f[_y + 1][_x + 1] == 0 && f[_y + 1][_x] == 0 && f[_y - 1][_x + 3] == 0 && f[_y - 1][_x + 2] == 0 && f[_y - 1][_x + 1] == 0 && f[_y + 1][_x -1] == 0 && f[_y ][_x -1] == 0 && f[_y -1][_x -1] == 0)   // проверяем окружные координаты .чтобы было свободно ,на возможность установки элемента
+			if (f[_y][_x + 3] == 0 && f[_y + 1][_x + 3] == 0 && f[_y + 1][_x + 2] == 0 && f[_y + 1][_x + 1] == 0 && f[_y + 1][_x] == 0 && f[_y - 1][_x + 3] == 0 && f[_y - 1][_x + 2] == 0 && f[_y - 1][_x + 1] == 0 && f[_y + 1][_x - 1] == 0 && f[_y][_x - 1] == 0 && f[_y - 1][_x - 1] == 0) // проверяем окружные координаты .чтобы было свободно ,на возможность установки элемента
 				return true;
 		}
 		if (_x == 0)
@@ -233,12 +236,11 @@ bool place_3_deck_ship(short f[][size_arr], short size, short _x, short _y)   //
 			if (f[_y - 1][_x - 1] == 0 && f[_y - 1][_x] == 0 && f[_y - 1][_x + 1] == 0 && f[_y - 1][_x + 2] == 0 && f[_y - 1][_x + 3] == 0 && f[_y][_x + 3] == 0 && f[_y + 1][_x + 3] == 0 && f[_y][_x - 1] == 0 && f[_y + 1][_x + 2] == 0 && f[_y + 1][_x + 1] == 0 && f[_y + 1][_x] == 0 && f[_y + 1][_x - 1] == 0)
 				return true;
 		}
-	}//	if (f[a][b] != 0)
+	} //	if (f[a][b] != 0)
 
 	return 0;
-
 }
-bool place_2_deck_ship(short f[][size_arr], short size, short _x, short _y)    // A-> x coord , B -> y coord
+bool place_2_deck_ship(short f[][size_arr], short size, short _x, short _y) // A-> x coord , B -> y coord
 {
 	//_y строка , _x столбец
 
@@ -251,7 +253,7 @@ bool place_2_deck_ship(short f[][size_arr], short size, short _x, short _y)    /
 		}
 		else if (_y == 0)
 		{
-			if (f[_y][_x - 1] == 0 && f[_y + 1][_x - 1] == 0 && f[_y + 2][_x - 1] == 0 && f[_y + 2][_x] == 0 && f[_y + 2][_x + 1] == 0 && f[_y + 1][_x + 1] == 0 && f[_y][_x + 1] == 0)   // проверяем окружные координаты .чтобы было свободно ,на возможность установки элемента
+			if (f[_y][_x - 1] == 0 && f[_y + 1][_x - 1] == 0 && f[_y + 2][_x - 1] == 0 && f[_y + 2][_x] == 0 && f[_y + 2][_x + 1] == 0 && f[_y + 1][_x + 1] == 0 && f[_y][_x + 1] == 0) // проверяем окружные координаты .чтобы было свободно ,на возможность установки элемента
 				return true;
 		}
 		else if (_x == 0)
@@ -268,21 +270,39 @@ bool place_2_deck_ship(short f[][size_arr], short size, short _x, short _y)    /
 				return true;
 			}
 		}
-	}//	if (f[a][b] != 0)
+	} //	if (f[a][b] != 0)
 
 	return 0;
-
 }
 void init_array(short f[size_arr][size_arr], short size)
 {
-	for (int i = 0; i < size; i++)    // инит массива нулями
+	for (int i = 0; i < size; i++) // инит массива нулями
 	{
 		for (int j = 0; j < size; j++)
 		{
 			f[i][j] = 0;
 		}
 
-	}    // init array by '0'
+	} // init array by '0'
+}
+
+
+template <size_t N>
+void initCoordPositionList(COORD (&pointsList)[N])
+{
+	// fill array with range struct values from {0,0} to {9,9}
+	int index = 0;
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{ 
+			pointsList[index++] = {(SHORT)i, (SHORT)j};
+		}
+	}
+
+	// cout << "Size of pointsList: " << N << '\n';
+
+    _getch();
 }
 
 void SetShipstoCoord(short f[10][10], short podgon_a, short bpodgon_b, bool p)
@@ -290,24 +310,24 @@ void SetShipstoCoord(short f[10][10], short podgon_a, short bpodgon_b, bool p)
 
 	// При установке корабля сделать числа разными для идентификации корабля     Пример :"Порадён 4-х палубный корабль"
 
-	// автоматичесская разброска кораблей 
+	// автоматичесская разброска кораблей
 	short a = 0;
 	short b = 0;
 	SYSTEMTIME T;
 	GetLocalTime(&T);
 	srand(T.wMilliseconds / 10);
-	a = rand() % 7;                       // по Х координате
-	b = rand() % 7;                      // по У координате
+	a = rand() % 7; // по Х координате
+	b = rand() % 7; // по У координате
 
 	// расположение четырёх-палубного корабля
-	f[b][a] = 4;                       // инит значений массива
+	f[b][a] = 4; // инит значений массива
 	f[b + 1][a] = 4;
 	f[b + 2][a] = 4;
 	f[b + 3][a] = 4;
 	if (p == true)
 	{
-		a += podgon_a;   // подгон индэкса к координатам окна
-		b += bpodgon_b;   //
+		a += podgon_a;	// подгон индэкса к координатам окна
+		b += bpodgon_b; //
 		for (size_t i = 0; i < 4; i++)
 		{
 			SetPos(a, b);
@@ -315,25 +335,25 @@ void SetShipstoCoord(short f[10][10], short podgon_a, short bpodgon_b, bool p)
 			++b;
 		}
 	}
-	//разброс трёхпалубных кораблей
+	// разброс трёхпалубных кораблей
 	for (size_t i = 0; i < 2; i++)
 	{
 		GetLocalTime(&T);
 		srand(T.wMilliseconds / 10);
-		a = rand() % 8;          // по X координате
-		b = rand() % 8;          // по Y координате
+		a = rand() % 8; // по X координате
+		b = rand() % 8; // по Y координате
 		if (!place_3_deck_ship(f, size_arr, a, b))
 		{
 			i--;
 		}
 		else
 		{
-			f[b][a] = 3;           // горизонтальный
+			f[b][a] = 3; // горизонтальный
 			f[b][a + 1] = 3;
 			f[b][a + 2] = 3;
 			if (p == true)
 			{
-				a += podgon_a;   // подгон индэкса к координатам окна
+				a += podgon_a; // подгон индэкса к координатам окна
 				b += bpodgon_b;
 				for (size_t i = 0; i < 3; i++)
 				{
@@ -345,24 +365,24 @@ void SetShipstoCoord(short f[10][10], short podgon_a, short bpodgon_b, bool p)
 		}
 	}
 
-	//разброс двухпалубных кораблей
+	// разброс двухпалубных кораблей
 	for (size_t i = 0; i < 3; i++)
 	{
 		GetLocalTime(&T);
 		srand(T.wMilliseconds / 10);
-		a = rand() % 9;          // по X координате
-		b = rand() % 9;          // по Y координате
+		a = rand() % 9; // по X координате
+		b = rand() % 9; // по Y координате
 		if (!place_2_deck_ship(f, size_arr, a, b))
 		{
 			i--;
 		}
 		else
 		{
-			f[b][a] = 2;           // вертикальный
+			f[b][a] = 2; // вертикальный
 			f[b + 1][a] = 2;
 			if (p == true)
 			{
-				a += podgon_a;   // подгон индэкса к координатам окна
+				a += podgon_a; // подгон индэкса к координатам окна
 				b += bpodgon_b;
 				for (size_t i = 0; i < 2; i++)
 				{
@@ -380,8 +400,8 @@ void SetShipstoCoord(short f[10][10], short podgon_a, short bpodgon_b, bool p)
 	{
 		GetLocalTime(&T);
 		srand(T.wMilliseconds / 10);
-		a = rand() % 10;   // по Х координате
-		b = rand() % 10;   // по У координате
+		a = rand() % 10; // по Х координате
+		b = rand() % 10; // по У координате
 		if (!place_1_deck_ship(f, size_arr, a, b))
 		{
 			i--;
@@ -391,7 +411,7 @@ void SetShipstoCoord(short f[10][10], short podgon_a, short bpodgon_b, bool p)
 			f[b][a] = 1;
 			if (p == true)
 			{
-				a += podgon_a;   // подгон индэкса к координатам окна
+				a += podgon_a; // подгон индэкса к координатам окна
 				b += bpodgon_b;
 				SetPos(a, b);
 				cout << 'X';
@@ -400,17 +420,17 @@ void SetShipstoCoord(short f[10][10], short podgon_a, short bpodgon_b, bool p)
 	}
 }
 
-void Fire(short y, short x, short fire_shoot_to_enemy[][size_arr], short fire_shoot_to_player[][size_arr], int podgon_x, int podgon_y, COORD &temp4, COORD &temp3, COORD &temp2)//,short **& NedobityePolya,byte &rows,byte &cols)
+void Fire(short y, short x, short fire_shoot_to_enemy[][size_arr], short fire_shoot_to_player[][size_arr], int podgon_x, int podgon_y, COORD &temp4, COORD &temp3, COORD &temp2) //,short **& NedobityePolya,byte &rows,byte &cols)
 {
-	y -= podgon_y;  //podgon_y  6
-	x -= podgon_x; //podgon_x  11
-	if (fire_shoot_to_enemy[y][x] >= 1 && fire_shoot_to_enemy[y][x] <= 4)    // если попал, показать символ
+	y -= podgon_y;														  // podgon_y  6
+	x -= podgon_x;														  // podgon_x  11
+	if (fire_shoot_to_enemy[y][x] >= 1 && fire_shoot_to_enemy[y][x] <= 4) // если попал, показать символ
 	{
 
 		counter_Player_shoot++;
 		cout << 'X';
 	}
-	else                              // если нет,компьютер начинает свой выстрел
+	else // если нет,компьютер начинает свой выстрел
 	{
 
 		cout << '.';
@@ -422,9 +442,9 @@ void Fire(short y, short x, short fire_shoot_to_enemy[][size_arr], short fire_sh
 			{
 				fire_shoot_to_player[y][x] = 10;
 				counter_Enemy_shoot++;
-				y = y + 6;                                     // convert values to coord 
+				y = y + 6; // convert values to coord
 				x += 31;
-				SetPos(x, y);                            // Set 
+				SetPos(x, y); // Set
 				Sleep(700);
 				SetColor('X');
 				y -= 6;
@@ -434,9 +454,9 @@ void Fire(short y, short x, short fire_shoot_to_enemy[][size_arr], short fire_sh
 					--y;
 					fire_shoot_to_player[y][x] = 10;
 					counter_Enemy_shoot++;
-					y = y + 6;                                     // convert values to coord 
+					y = y + 6; // convert values to coord
 					x += 31;
-					SetPos(x, y);                            // Set pos 
+					SetPos(x, y); // Set pos
 					Sleep(700);
 					SetColor('X');
 					y -= 6;
@@ -446,9 +466,9 @@ void Fire(short y, short x, short fire_shoot_to_enemy[][size_arr], short fire_sh
 						--y;
 						fire_shoot_to_player[y][x] = 10;
 						counter_Enemy_shoot++;
-						y = y + 6;                                     // convert values to coord 
+						y = y + 6; // convert values to coord
 						x += 31;
-						SetPos(x, y);                            // Set pos 
+						SetPos(x, y); // Set pos
 						Sleep(700);
 						SetColor('X');
 						y -= 6;
@@ -456,12 +476,11 @@ void Fire(short y, short x, short fire_shoot_to_enemy[][size_arr], short fire_sh
 					}
 				}
 
-
-			}   // if ==4
+			} // if ==4
 			temp4.X = 0;
 			temp4.Y = 0;
-		
-		}  //if temp4 have a value
+
+		} // if temp4 have a value
 		///////////////////////////////////////////////////////////////////////////
 		if (temp3.X > 0 && temp3.Y > 0)
 		{
@@ -471,9 +490,9 @@ void Fire(short y, short x, short fire_shoot_to_enemy[][size_arr], short fire_sh
 			{
 				fire_shoot_to_player[y][x] = 10;
 				counter_Enemy_shoot++;
-				y += 6;                                     // convert values to coord 
+				y += 6; // convert values to coord
 				x += 31;
-				SetPos(x, y);                            // Set pos 
+				SetPos(x, y); // Set pos
 				Sleep(700);
 				SetColor('X');
 				y -= 6;
@@ -483,18 +502,18 @@ void Fire(short y, short x, short fire_shoot_to_enemy[][size_arr], short fire_sh
 					--x;
 					fire_shoot_to_player[y][x] = 10;
 					counter_Enemy_shoot++;
-					y = y + 6;                                     // convert values to coord 
+					y = y + 6; // convert values to coord
 					x += 31;
-					SetPos(x, y);                            // Set pos 
+					SetPos(x, y); // Set pos
 					Sleep(700);
 					SetColor('X');
 					y -= 6;
 					x -= 31;
 				}
-			}   // if ==3
+			} // if ==3
 			temp3.X = 0;
 			temp3.Y = 0;
-		}  //if temp3 have a value
+		} // if temp3 have a value
 		///////////////////////////////////////////////
 
 		if (temp2.X > 0 && temp2.Y > 0)
@@ -505,24 +524,26 @@ void Fire(short y, short x, short fire_shoot_to_enemy[][size_arr], short fire_sh
 			{
 				fire_shoot_to_player[y][x] = 10;
 				counter_Enemy_shoot++;
-				y += 6;                                     // convert values to coord 
+				y += 6; // convert values to coord
 				x += 31;
-				SetPos(x, y);                            // Set pos 
+				SetPos(x, y); // Set pos
 				Sleep(700);
 				SetColor('X');
 				y -= 6;
 				x -= 31;
 
-			}   // if ==2
+			} // if ==2
 
 			temp2.X = 0;
 			temp2.Y = 0;
 		}
 
 		int check = 1;
+		int positionToSHootIndex;
+
 		while (1)
 		{
-			
+
 			/*if (check < 10)
 			{
 				SYSTEMTIME T;
@@ -544,51 +565,59 @@ void Fire(short y, short x, short fire_shoot_to_enemy[][size_arr], short fire_sh
 					}
 				}
 			}*/
-			
+
 			SYSTEMTIME T;
 			GetLocalTime(&T);
 			srand(T.wMilliseconds / 10);
 			// there may be bug
 			// SHOOT coord pos generation
+			// OLD VERSION
 			y = rand() % 10;
 			x = rand() % 10;
+			// <OLD VERSION
+
+			// NEW VERSION
+			positionToSHootIndex = rand() % (sizeof(points) / sizeof(points[0]) + 1);
+			x = points[positionToSHootIndex].X;
+			y = points[positionToSHootIndex].Y;
+
+			// <NEW VERSION
+
 			/*if (fire_shoot_to_player[y][x - 1] == 10 || fire_shoot_to_player[y - 1][x - 1] == 10 || fire_shoot_to_player[y - 1][x] == 10 || fire_shoot_to_player[y - 1][x + 1] == 10 || fire_shoot_to_player[y][x + 1] == 10 || fire_shoot_to_player[y + 1][x + 1] == 10 || fire_shoot_to_player[y + 1][x] == 10 || fire_shoot_to_player[y + 1][x - 1] == 10)
 			{
 				continue;
 			}*/
 
-		
-			if (fire_shoot_to_player[y][x] == 5)                
+			if (fire_shoot_to_player[y][x] == 5)
 			{
-				//continue;
+				// continue;
 				if (x < 9 && y < 9)
 				{
 					++x;
 					++y;
 				}
-
 			}
-			if (fire_shoot_to_player[y][x] >= 1 && fire_shoot_to_player[y][x] <= 4)                // if shoot 
+			if (fire_shoot_to_player[y][x] >= 1 && fire_shoot_to_player[y][x] <= 4) // if shoot
 			{
 				/*SetPos(10, 20);
 				cout << "Player Field " << fire_shoot_to_player[y][x];*/
 
-				if (fire_shoot_to_player[y][x] == 4)        // первое попадание 
+				if (fire_shoot_to_player[y][x] == 4) // первое попадание
 				{
 					fire_shoot_to_player[y][x] = 10;
 					counter_Enemy_shoot++;
-					y += 6;                                     // convert values to coord 
+					y += 6; // convert values to coord
 					x += 31;
-					SetPos(x, y);                            // Set pos 
+					SetPos(x, y); // Set pos
 					Sleep(700);
-					SetColor('X');                          //Color nd show symbol
+					SetColor('X'); // Color nd show symbol
 					y -= 6;
 					x -= 31;
-					if (fire_shoot_to_player[y + 1][x] == 4)       //второе попадание 
+					if (fire_shoot_to_player[y + 1][x] == 4) // второе попадание
 					{
 						fire_shoot_to_player[y + 1][x] = 10;
 						counter_Enemy_shoot++;
-						++y;   // подгон под новою позицию 
+						++y; // подгон под новою позицию
 						y += 6;
 						x += 31;
 						SetPos(x, y);
@@ -596,11 +625,11 @@ void Fire(short y, short x, short fire_shoot_to_enemy[][size_arr], short fire_sh
 						SetColor('X');
 						y -= 6;
 						x -= 31;
-						if (fire_shoot_to_player[y + 1][x] == 4)      // третье попадание 
+						if (fire_shoot_to_player[y + 1][x] == 4) // третье попадание
 						{
 							fire_shoot_to_player[y + 1][x] = 10;
 							counter_Enemy_shoot++;
-							y += 1; // подгон под новою позицию 
+							y += 1; // подгон под новою позицию
 
 							y += 6;
 							x += 31;
@@ -609,11 +638,11 @@ void Fire(short y, short x, short fire_shoot_to_enemy[][size_arr], short fire_sh
 							SetColor('X');
 							y -= 6;
 							x -= 31;
-							if (fire_shoot_to_player[y + 1][x] == 4)   // корабль убит
+							if (fire_shoot_to_player[y + 1][x] == 4) // корабль убит
 							{
 								fire_shoot_to_player[y + 1][x] = 10;
 								counter_Enemy_shoot++;
-								y += 1;        // подгон под новою позицию 
+								y += 1; // подгон под новою позицию
 
 								y += 6;
 								x += 31;
@@ -642,28 +671,26 @@ void Fire(short y, short x, short fire_shoot_to_enemy[][size_arr], short fire_sh
 						temp4.X = x;
 						temp4.Y = y;
 					}
-				}            //if 4
-
+				} // if 4
 
 				////////////////////////////////////////////////////////////////////////////
 
-
-				if (fire_shoot_to_player[y][x] == 3)                                       //3
+				if (fire_shoot_to_player[y][x] == 3) // 3
 				{
 					fire_shoot_to_player[y][x] = 10;
 					counter_Enemy_shoot++;
-					y += 6;                                     // convert values to coord 
+					y += 6; // convert values to coord
 					x += 31;
-					SetPos(x, y);                            // Set pos 
+					SetPos(x, y); // Set pos
 					Sleep(700);
-					SetColor('X');                          //Color nd show symbol
+					SetColor('X'); // Color nd show symbol
 					y -= 6;
 					x -= 31;
 					if (fire_shoot_to_player[y][x + 1] == 3)
 					{
 						fire_shoot_to_player[y][x + 1] = 10;
 						counter_Enemy_shoot++;
-						++x;   // подгон под новою позицию 
+						++x; // подгон под новою позицию
 						y += 6;
 						x += 31;
 						SetPos(x, y);
@@ -675,7 +702,7 @@ void Fire(short y, short x, short fire_shoot_to_enemy[][size_arr], short fire_sh
 						{
 							fire_shoot_to_player[y][x + 1] = 10;
 							counter_Enemy_shoot++;
-							++x; // подгон под новою позицию 
+							++x; // подгон под новою позицию
 
 							y += 6;
 							x += 31;
@@ -693,36 +720,32 @@ void Fire(short y, short x, short fire_shoot_to_enemy[][size_arr], short fire_sh
 						}
 
 					} // if y+1
-					else    //temp x+1
+					else // temp x+1
 					{
 						x -= 1;
 						temp3.X = x;
 						temp3.Y = y;
 					}
-				}                                                   //if 3
-
-
-
+				} // if 3
 
 				///////////////////////////////////////////////////////////////////////
 
-
-				if (fire_shoot_to_player[y][x] == 2)               //if 2
+				if (fire_shoot_to_player[y][x] == 2) // if 2
 				{
 					fire_shoot_to_player[y][x] = 10;
 					counter_Enemy_shoot++;
-					y += 6;                                     // convert values to coord 
+					y += 6; // convert values to coord
 					x += 31;
-					SetPos(x, y);                            // Set pos 
+					SetPos(x, y); // Set pos
 					Sleep(700);
-					SetColor('X');                          //Color nd show symbol
+					SetColor('X'); // Color nd show symbol
 					y -= 6;
 					x -= 31;
 					if (fire_shoot_to_player[y + 1][x] == 2)
 					{
 						fire_shoot_to_player[y + 1][x] = 10;
 						counter_Enemy_shoot++;
-						++y;   // подгон под новою позицию
+						++y; // подгон под новою позицию
 						y += 6;
 						x += 31;
 						SetPos(x, y);
@@ -732,33 +755,27 @@ void Fire(short y, short x, short fire_shoot_to_enemy[][size_arr], short fire_sh
 						x -= 31;
 
 					} // if y+1
-					else    //temp x+1
+					else // temp x+1
 					{
 						--y;
 						temp2.X = x;
 						temp2.Y = y;
-
 					}
-				}                        //if 2
+				} // if 2
 
-
-				//fire_shoot_to_player[y][x] = 10;
+				// fire_shoot_to_player[y][x] = 10;
 				////SetPos(10, 20);
 				////cout << "Player Field " << fire_shoot_to_player[y][x];// set val 10 to array
-				//y += 6;                                     // convert values to coord 
-				//x += 31;
+				// y += 6;                                     // convert values to coord
+				// x += 31;
 
-				//SetPos(x, y);                            // Set pos 
-				//SetColor('X');                          //Color nd show symbol
-
-
-
-
+				// SetPos(x, y);                            // Set pos
+				// SetColor('X');                          //Color nd show symbol
 			}
-			else if (!fire_shoot_to_player[y][x] >= 1 && fire_shoot_to_player[y][x] <= 4)              // если компьютер промахнулся
+			else if (!(fire_shoot_to_player[y][x] >= 1 && fire_shoot_to_player[y][x] <= 4)) // если компьютер промахнулся
 			{
-				fire_shoot_to_player[y][x] = 5;                                                        // указание на будущее ,что компьютер туда уже бил
-				y += 6;                                     // convert values to coord 
+				fire_shoot_to_player[y][x] = 5; // указание на будущее ,что компьютер туда уже бил
+				y += 6;							// convert values to coord
 				x += 31;
 				SetPos(x, y);
 				Sleep(700);
@@ -767,11 +784,10 @@ void Fire(short y, short x, short fire_shoot_to_enemy[][size_arr], short fire_sh
 			}
 			check++;
 		} // while (1)
-	}    //  	else                              // если нет,компьютер начинает свой выстрел
-
+	} //  	else                              // если нет,компьютер начинает свой выстрел
 }
 
-void GameProcess()                                                                  // Игровой процесс
+void GameProcess() // Игровой процесс
 {
 	system("mode con lines=25 cols=50");
 
@@ -783,30 +799,23 @@ void GameProcess()                                                              
 	SYSTEMTIME start_play;
 	SYSTEMTIME end_play;
 
-	COORD poscursor{ 11, 6 };
-	COORD player_field{ 10, 5 };    // позиция первой  [0][0] ячейки {11,6} ,позиция поля выстрелов по противнику
-	COORD enemy_field{ 30, 5 };    // позиция поля игрока  и его поражений
-	COORD _temp4;                 // временная координата для добивания корабля
-	COORD _temp3;
-	COORD _temp2;
-	_temp4.X = 0;
-	_temp4.Y = 0;
+	COORD poscursor{11, 6};
+	COORD player_field{10, 5}; // позиция первой  [0][0] ячейки {11,6} ,позиция поля выстрелов по противнику
+	COORD enemy_field{30, 5};  // позиция поля игрока  и его поражений
+	COORD _temp2{0, 0};
+	COORD _temp3{0, 0};
+	COORD _temp4{0, 0}; // временная координата для добивания корабля
 
-	_temp3.X = 0;
-	_temp3.Y = 0;
+	bool P = 1; // set show or nor show array on the field
 
-	_temp2.X = 0;
-	_temp2.Y = 0;
-
-	bool P = 1;    // set show or nor show array on the field
-
-	// размер массива  const short size_arr = 10;   
-	short Player_field_array[size_arr][size_arr];    // массив поля игрока
-	short Enemy_filed_array[size_arr][size_arr];    // массив поля противника
+	// размер массива  const short size_arr = 10;
+	short Player_field_array[size_arr][size_arr]; // массив поля игрока
+	short Enemy_filed_array[size_arr][size_arr];  // массив поля противника
 	/*byte rows=1, cols=2;
 	short **NeDobityePolya;*/
 	init_array(Player_field_array, size_arr);
 	init_array(Enemy_filed_array, size_arr);
+	initCoordPositionList(points);
 
 	RussianMessage("\t\t  The game started ");
 	PrintField(player_field);
@@ -817,7 +826,6 @@ void GameProcess()                                                              
 	SetShipstoCoord(Enemy_filed_array, 11, 6, false);
 
 	GetLocalTime(&start_play);
-
 
 	SetCur(poscursor);
 	while (true)
@@ -847,12 +855,12 @@ void GameProcess()                                                              
 			break;
 		case ENTER:
 		case SPACE:
-			Fire(poscursor.Y, poscursor.X, Enemy_filed_array, Player_field_array, 11, 6, _temp4, _temp3, _temp2);//,NeDobityePolya,rows,cols);
+			Fire(poscursor.Y, poscursor.X, Enemy_filed_array, Player_field_array, 11, 6, _temp4, _temp3, _temp2); //,NeDobityePolya,rows,cols);
 			break;
-		}   // switch
+		} // switch
 		SetCur(poscursor);
 
-		if (counter_Player_shoot == 20)     //определение победителя
+		if (counter_Player_shoot == 20) // определение победителя
 		{
 			GetLocalTime(&end_play);
 			Sleep(1500);
@@ -921,14 +929,14 @@ void GameProcess()                                                              
        $$/   $$$$$$/   $$$$$$/        $$/      $$/ $$/ $$/   $$/ $$/ 
             )X";
 
-			}   // for(2)
+			} // for(2)
 			TimeGame(start_play, end_play);
 			RussianMessage("Press 'Enter' or 'Space' to return to menu");
 
 			int cd = _getch();
 			if (cd == 13 || cd == 32)
 				return;
-		}   // if(counter player==20)
+		} // if(counter player==20)
 
 		//////////////////////////////////////////////////////////////////////////////////////////
 
@@ -950,11 +958,10 @@ void GameProcess()                                                              
 
 			Sleep(2000);
 			break;
-		}    // if counter Enemy ==20
+		} // if counter Enemy ==20
 
 		SetCur(poscursor);
-	} //while(1)
-
+	} // while(1)
 }
 
 inline void cls()
@@ -964,67 +971,63 @@ inline void cls()
 
 void PrintField(COORD pos)
 {
-	pos.Y--;                            //
-	pos.X++;                           //
-	SetCur(pos);                      //
-	for (int i = 0; i <= 9; i++)    //
-	{                               //         output numbers of coords   горизонтальные 
-		cout << char('A' + i);       //
-	}                             //
-	pos.Y++;                     //
-	pos.X--;                    //
+	pos.Y--;					 //
+	pos.X++;					 //
+	SetCur(pos);				 //
+	for (int i = 0; i <= 9; i++) //
+	{							 //         output numbers of coords   горизонтальные
+		cout << char('A' + i);	 //
+	} //
+	pos.Y++; //
+	pos.X--; //
 
-
-
-	pos.X--;                            //
-	pos.Y++;                           //
-	for (int i = 0; i <= 9; i++)     //
-	{                                //
-		SetCur(pos);                //
-		cout << int(i);            //         output numbers of coords  вертикальные
-		pos.Y++;                  //
-	}                            //
-	pos.X++;                    //
-	pos.Y -= 11;               //
-
-
+	pos.X--;					 //
+	pos.Y++;					 //
+	for (int i = 0; i <= 9; i++) //
+	{							 //
+		SetCur(pos);			 //
+		cout << int(i);			 //         output numbers of coords  вертикальные
+		pos.Y++;				 //
+	} //
+	pos.X++;	 //
+	pos.Y -= 11; //
 
 	SetCur(pos);
 	for (int i = 0; i < 12; i++)
 	{
 		for (int j = 0; j < 12; j++)
 		{
-			if (i == 0 && j == 0)                     // up left        
+			if (i == 0 && j == 0) // up left
 			{
 				cout << char(201);
 			}
-			else if (i == 0 && j == 11)               // up right
+			else if (i == 0 && j == 11) // up right
 			{
 				cout << char(187);
 			}
-			else if (i == 11 && j == 0)               //down left
+			else if (i == 11 && j == 0) // down left
 			{
 				cout << char(200);
 			}
-			else if (i == 11 && j == 11)              //down right
+			else if (i == 11 && j == 11) // down right
 			{
 				cout << char(188);
 			}
-			else if (j == 0 && i > 0 && i < 12 || j == 11 && i>0 && i < 12)    //lines-vertical
+			else if (j == 0 && i > 0 && i < 12 || j == 11 && i > 0 && i < 12) // lines-vertical
 			{
 				cout << char(186);
 			}
-			else if (i == 0 && j > 0 && j < 11 || i == 11 && j>0 && j < 11)    //lines-horisontal
+			else if (i == 0 && j > 0 && j < 11 || i == 11 && j > 0 && j < 11) // lines-horisontal
 			{
 				cout << char(205);
 			}
 			else
 				cout << " ";
-		}   // for (j)
+		} // for (j)
 		pos.Y++;
 
 		SetCur(pos);
-	}  // for(i)
+	} // for(i)
 }
 
 void TimeGame(SYSTEMTIME start_play, SYSTEMTIME end_play)
@@ -1035,10 +1038,8 @@ void TimeGame(SYSTEMTIME start_play, SYSTEMTIME end_play)
 		sec += 60;
 	SetPos(18, 30);
 	RussianMessage("Game time was ");
-	cout <<" "<< min;
+	cout << " " << min;
 	RussianMessage(" minutes and ");
-	cout <<" "<< sec;
+	cout << " " << sec;
 	RussianMessage(" seconds.");
-
 }
-
