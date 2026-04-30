@@ -299,10 +299,6 @@ void initCoordPositionList(COORD (&pointsList)[N])
 			pointsList[index++] = {(SHORT)i, (SHORT)j};
 		}
 	}
-
-	// cout << "Size of pointsList: " << N << '\n';
-
-    _getch();
 }
 
 void SetShipstoCoord(short f[10][10], short podgon_a, short bpodgon_b, bool p)
